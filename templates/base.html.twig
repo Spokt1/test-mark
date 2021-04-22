@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Конверктация из markdown в html{% endblock %}</title>
+        {% block stylesheets %}
+            <style>
+                html,body{
+                    height: 100% !important;
+                    padding: 0;
+                    font-size: 16px !important;
+                    font-weight: 400;
+                    line-height: 1.42857;
+                    min-width: 320px;
+                    display: flex;
+                    flex-direction: column;
+                }
+                body{
+                    margin: 0;
+                    color: #3F4254;
+                    text-align: left;
+                    background-color: #ffffff;
+                }
+                *, ::before, ::after{
+                    box-sizing: border-box;
+                }
+                .container-fluid{
+                    width: 100%;
+                    padding-right: 12.5px;
+                    padding-left: 12.5px;
+                    margin-right: auto;
+                    margin-left: auto;
+                }
+                .row{
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-right: -12.5px;
+                    margin-left: -12.5px;
+                }
+                .col6{
+                    flex: 0 0 50%;
+                    max-width: 50%;
+                    position: relative;
+                    width: 100%;
+                    padding-right: 12.5px;
+                    padding-left: 12.5px;
+                }
+                textarea{
+                    width: 100%;
+                    resize: vertical;
+                    padding: 10px;
+                    margin: 10px 0;
+                }
+            </style>
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col6">
+                        <form name="markDown">
+                            <textarea
+                                 name="markDownInput"
+                                 cols="30"
+                                 rows="7"
+                                 placeholder="Введите текст для преобразования"
+                                 onchange="requestData()"
+                             ></textarea>
+                        </form>
+                    </div>
+                    <div class="col6">
+                        <div id="markDownResult"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+        {% block javascripts %}
+            <script>
+                function requestData()
+                {
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/parseText");
+                    xhr.onreadystatechange  = function() {
+                        if (this.readyState == 4 ) {
+                            switch (this.status){
+                                case 404:
+                                case 500:
+                                    alert("Не удалось выполнить запрос");
+                                break;
+                                case 200:
+                                    const { parsedString } = JSON.parse(this.response);
+                                    document.getElementById('markDownResult').innerHTML = parsedString;
+                                break;
+                            }
+                        }
+                    };
+                    xhr.send(new FormData(document.forms.markDown));
+                }
+            </script>
+        {% endblock %}
+    </body>
+</html>
