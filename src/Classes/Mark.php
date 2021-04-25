@@ -31,7 +31,7 @@ class Mark
      * @return array
      */
 
-    protected function prepareElements($text): array
+    private function prepareElements($text): array
     {
         $elements = [];
 
@@ -76,7 +76,7 @@ class Mark
      * @return array|void
      */
 
-    protected function checkRegexp(string $convertString)
+    private function checkRegexp(string $convertString)
     {
         $marker = $convertString[0];
         if ($convertString[1] === $marker && preg_match($this->boldRegex[$marker], $convertString, $matches)) {
@@ -98,7 +98,7 @@ class Mark
      * @param array $element
      * @return array
      */
-    protected function checkRecursive(array $element): array
+    private function checkRecursive(array $element): array
     {
         if (key_exists('tag', $element)) {
             $element['elements'] = $this->prepareElements($element['text']);
@@ -110,7 +110,7 @@ class Mark
      * @param array $elements
      * @return string
      */
-    protected function elements(array $elements): string
+    private function elements(array $elements): string
     {
         $strMarkup = '';
         foreach ($elements as $element) {
@@ -125,7 +125,7 @@ class Mark
      * @param array $element
      * @return string
      */
-    protected function element(array $element): string
+    private function element(array $element): string
     {
         $element = $this->checkRecursive($element);
 
