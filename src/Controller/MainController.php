@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
+use App\Classes\Mark;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Environment;
-use League\CommonMark\Extension\InlinesOnly\InlinesOnlyExtension;
 
 
 class MainController extends AbstractController
@@ -29,11 +27,7 @@ class MainController extends AbstractController
     public function parseText(Request $request): JsonResponse
     {
         $str = $request->get('markDownInput');
-
-        $environment = new Environment();
-        $environment->addExtension(new InlinesOnlyExtension());
-        $converter = new CommonMarkConverter([], $environment);
-
-        return $this->json(['parsedString' => $converter->convertToHtml($str)]);
+        $parser = new Mark();
+        return $this->json(['parsedString' => $parser->parse($str)]);
     }
 }
